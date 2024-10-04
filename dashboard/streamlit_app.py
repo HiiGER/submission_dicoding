@@ -42,7 +42,7 @@ with st.sidebar:
     st.title("Tetalen Mukti")
 
     # Logo Image
-    st.image("saya.jpeg")
+    st.image("https://github.com/HiiGER/submission_dicoding/blob/master/dashboard/saya.JPEG?raw=true")
 
     # Date Range
     start_date, end_date = st.date_input(
