@@ -21,12 +21,12 @@ datetime_cols = [
     "shipping_limit_date",
 ]
 
-all_df = pd.read_csv("../data/all_data.csv")
+all_df = pd.read_csv("https://raw.githubusercontent.com/HiiGER/submission_dicoding/refs/heads/master/all_data.csv")
 all_df.sort_values(by="order_approved_at", inplace=True)
 all_df.reset_index(inplace=True)
 
 # Geolocation Dataset
-geolocation = pd.read_csv("../data/geolocation.csv")
+geolocation = pd.read_csv("https://raw.githubusercontent.com/HiiGER/submission_dicoding/refs/heads/master/geolocation.csv")
 data = geolocation.drop_duplicates(subset="customer_unique_id")
 
 for col in datetime_cols:
