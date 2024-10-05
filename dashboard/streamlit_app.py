@@ -21,12 +21,12 @@ datetime_cols = [
     "shipping_limit_date",
 ]
 
-all_df = pd.read_csv("all_data.csv")
+all_df = pd.read_csv("../data/all_data.csv")
 all_df.sort_values(by="order_approved_at", inplace=True)
 all_df.reset_index(inplace=True)
 
 # Geolocation Dataset
-geolocation = pd.read_csv("geolocation.csv")
+geolocation = pd.read_csv("../data/geolocation.csv")
 data = geolocation.drop_duplicates(subset="customer_unique_id")
 
 for col in datetime_cols:
@@ -42,7 +42,9 @@ with st.sidebar:
     st.title("Tetalen Mukti")
 
     # Logo Image
-    st.image("https://github.com/HiiGER/submission_dicoding/blob/master/dashboard/saya.JPEG?raw=true")
+    st.image(
+        "https://github.com/HiiGER/submission_dicoding/blob/master/dashboard/saya.JPEG?raw=true"
+    )
 
     # Date Range
     start_date, end_date = st.date_input(
@@ -51,6 +53,9 @@ with st.sidebar:
         min_value=min_date,
         max_value=max_date,
     )
+
+    st.caption("Copyright (C) Angger tirta T.M 2024")
+
 
 # Main
 main_df = all_df[
@@ -76,13 +81,13 @@ col1, col2 = st.columns(2)
 
 with col1:
     total_order = daily_orders_df["order_count"].sum()
-    st.markdown(f"Total Order: **{total_order}**")
+    st.markdown(f"Total Pembelian: **{total_order}**")
 
 with col2:
     total_revenue = format_currency(
         daily_orders_df["revenue"].sum(), "IDR", locale="id_ID"
     )
-    st.markdown(f"Total Revenue: **{total_revenue}**")
+    st.markdown(f"Total Pendapatan : **{total_revenue}**")
 
 fig, ax = plt.subplots(figsize=(12, 6))
 ax.plot(
@@ -97,16 +102,18 @@ ax.tick_params(axis="y", labelsize=15)
 st.pyplot(fig)
 
 # Order Items
+st.subheader(" ")
+st.subheader(" ")
 st.subheader("Order Items")
 col1, col2 = st.columns(2)
 
 with col1:
     total_items = sum_order_items_df["product_count"].sum()
-    st.markdown(f"Total Items: **{total_items}**")
+    st.markdown(f"Total jumah barang: **{total_items}**")
 
 with col2:
     avg_items = sum_order_items_df["product_count"].mean()
-    st.markdown(f"Average Items: **{avg_items}**")
+    st.markdown(f"Average : **{avg_items}**")
 
 fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(45, 25))
 
@@ -143,43 +150,29 @@ ax[1].tick_params(axis="x", labelsize=30)
 
 st.pyplot(fig)
 
-# Customer Demographic
 
-st.subheader("Customer Demographic")
+st.subheader(" ")
+st.subheader(" ")
+st.subheader("Demographic")
+most_common_state = state.customer_state.value_counts().index[0]
+st.markdown(f"Most Common State: **{most_common_state}**")
 
-(
-    tab1,
-    tab2,
-) = st.tabs(["State", "Geolocation"])
+fig, ax = plt.subplots(figsize=(12, 6))
+sns.barplot(
+    x=state.customer_state.value_counts().index,
+    y=state.customer_count.values,
+    data=state,
+    palette=[
+        "#068DA9" if score == most_common_state else "#D3D3D3"
+        for score in state.customer_state.value_counts().index
+    ],
+)
 
-with tab1:
-    most_common_state = state.customer_state.value_counts().index[0]
-    st.markdown(f"Most Common State: **{most_common_state}**")
-
-    fig, ax = plt.subplots(figsize=(12, 6))
-    sns.barplot(
-        x=state.customer_state.value_counts().index,
-        y=state.customer_count.values,
-        data=state,
-        palette=[
-            "#068DA9" if score == most_common_state else "#D3D3D3"
-            for score in state.customer_state.value_counts().index
-        ],
-    )
-
-    plt.title("Number customers from State", fontsize=15)
-    plt.xlabel("State")
-    plt.ylabel("Number of Customers")
-    plt.xticks(fontsize=12)
-    fig.tight_layout()  # Add this line to ensure the layout is tight
-    st.pyplot(fig)  # This line is already correct
-
-with tab2:
-    map_plot.plot()
-
-    with st.expander("See Explanation"):
-        st.write(
-            "ada lebih banyak pelanggan di kota-kota yang merupakan ibu kota (São Paulo, Rio de Janeiro, Porto Alegre, dan lainnya)."
-        )
+plt.title("Number customers from State", fontsize=15)
+plt.xlabel("State")
+plt.ylabel("Number of Customers")
+plt.xticks(fontsize=12)
+fig.tight_layout()  # Add this line to ensure the layout is tight
+st.pyplot(fig)  # This line is already correct
 
 st.caption("Copyright (C) Angger tirta T.M 2024")
