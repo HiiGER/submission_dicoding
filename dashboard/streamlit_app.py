@@ -43,7 +43,7 @@ with st.sidebar:
 
     # Logo Image
     st.image(
-        "https://github.com/HiiGER/submission_dicoding/blob/master/dashboard/images.png"
+        "https://github.com/HiiGER/submission_dicoding/blob/master/dashboard/images.png?raw=true"
     )
 
     # Date Range
